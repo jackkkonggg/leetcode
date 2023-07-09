@@ -3,8 +3,15 @@ package org.jackkkonggg.hard;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+/**
+ * <a href="https://leetcode.com/problems/substring-with-largest-variance/">LeetCode</a>
+ */
 public class LargestVariance {
     public int solve(String s) {
+        if (s.length() == 0) {
+            throw new IllegalArgumentException("Expected input length to be >= 1");
+        }
+
         int count1, count2, maxVariance = 0;
         HashSet<Character> distinctChars = s.chars().mapToObj(c -> (char) c).collect(Collectors.toCollection(HashSet::new));
 
