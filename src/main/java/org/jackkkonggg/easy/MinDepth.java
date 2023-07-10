@@ -2,6 +2,9 @@ package org.jackkkonggg.easy;
 
 import org.jackkkonggg.structure.TreeNode;
 
+/**
+ * <a href="https://leetcode.com/problems/minimum-depth-of-binary-tree/">LeetCode</a>
+ */
 public class MinDepth {
     public int solve(TreeNode root) {
         if (root == null) return 0;
