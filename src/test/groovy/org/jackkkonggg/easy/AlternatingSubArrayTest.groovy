@@ -24,5 +24,6 @@ class AlternatingSubArrayTest extends Specification {
         nums            | maxLength
         [2, 3, 4, 3, 4] | 4
         [4, 5, 6]       | 2
+        [21, 9, 5]      | -1
     }
 }
