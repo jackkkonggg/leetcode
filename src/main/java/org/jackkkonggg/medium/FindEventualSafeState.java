@@ -1,43 +1,45 @@
 package org.jackkkonggg.medium;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
  * @author: Jack Ong
  * @date: 2023/07/12 11:14
  */
-
-
 public class FindEventualSafeState {
-    private int numNodes;
-    private List<List<Integer>> outgoing;
-    private List<ArrayList<Integer>> incoming;
 
-    /**
-     * @param graph directed adjacency list
-     *              example: [[1,2],[2,3],[5],[0],[5],[],[]]
-     * @return returns safe nodes in the graph, sorted in ascending order
-     */
-    public List<Integer> eventualSafeNodes(int[][] graph) {
-        numNodes = graph.length;
-        outgoing = Arrays.stream(graph)
-                         .map(outgoingEdges -> Arrays.stream(outgoingEdges).boxed().toList())
-                         .toList();
-        incoming = Arrays.stream(graph).map(edges -> new ArrayList<Integer>()).toList();
-        IntStream.range(0, numNodes)
-                 .boxed()
-                 .forEach(u -> outgoing.get(u).forEach(v -> incoming.get(v).add(u)));
+  /**
+   * @param graph directed adjacency list example: [[1,2],[2,3],[5],[0],[5],[],[]]
+   * @return returns safe nodes in the graph, sorted in ascending order
+   */
+  public List<Integer> eventualSafeNodes(int[][] graph) {
+    int n = graph.length;
+    Map<Integer, Integer> indegree = new HashMap<>();
+    IntStream.range(0, n).boxed().forEach(i -> indegree.merge(i, graph[i].length, Integer::sum));
 
-        List<Integer> terminalNodes = IntStream.range(0, numNodes)
-                                               .boxed()
-                                               .filter(i -> graph[i].length == 0)
-                                               .toList();
-        System.out.println(outgoing);
-        System.out.println(incoming);
-        System.out.println(terminalNodes);
-        return null;
+    List<ArrayList<Integer>> adj =
+        IntStream.range(0, n).boxed().map(i -> new ArrayList<Integer>()).toList();
+
+    IntStream.range(0, n)
+        .boxed()
+        .forEach(i -> Arrays.stream(graph[i]).forEach(node -> adj.get(node).add(i)));
+
+    Queue<Integer> queue = new ArrayDeque<>();
+    IntStream.range(0, n).boxed().filter(i -> indegree.getOrDefault(i, 0) == 0).forEach(queue::add);
+
+    List<Boolean> safe = new ArrayList<>(IntStream.range(0, n).boxed().map(i -> false).toList());
+    while (!queue.isEmpty()) {
+      int node = queue.poll();
+      safe.set(node, true);
+      adj.get(node)
+          .forEach(
+              neighbor -> {
+                indegree.merge(neighbor, -1, Integer::sum);
+                if (indegree.getOrDefault(neighbor, 0) == 0) queue.add(neighbor);
+              });
     }
+
+    return IntStream.range(0, n).boxed().filter(safe::get).toList();
+  }
 }

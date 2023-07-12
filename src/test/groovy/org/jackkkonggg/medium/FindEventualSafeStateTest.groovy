@@ -10,10 +10,15 @@ import spock.lang.Specification
  */
 class FindEventualSafeStateTest extends Specification {
     @Shared
-    def safeStateFinder = new FindEventualSafeState();
+    def safeStateFinder = new FindEventualSafeState()
+
     def "should work with example input"() {
         expect:
-        def graph = [[1,2],[2,3],[5],[0],[5],[],[]] as int[][]
-        safeStateFinder.eventualSafeNodes(graph) == null
+        safeStateFinder.eventualSafeNodes(graph as int[][]) == output
+
+        where:
+        graph                                      | output
+        [[1, 2], [2, 3], [5], [0], [5], [], []]    | [2, 4, 5, 6]
+        [[1, 2, 3, 4], [1, 2], [3, 4], [0, 4], []] | [4]
     }
 }
