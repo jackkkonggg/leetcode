@@ -8,7 +8,7 @@ class DistanceKBinaryTreeTest extends Specification {
     @Shared
     def distanceKCalculator = new DistanceKBinaryTree()
 
-    def "should work"() {
+    def "should work with example input"() {
         expect:
         distanceKCalculator.distanceK(root, target, distance) == output
 
