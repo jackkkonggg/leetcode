@@ -21,6 +21,7 @@ class MinimumSpeedToArriveOnTimeTest extends Specification {
         [1, 3, 2] | 6    | 1
         [1, 3, 2] | 2.7  | 3
         [1, 3, 2] | 1.9  | -1
-//        [1, 3, 2] | 2.01 | 3
+        [1, 3, 2] | 2.01 | 200
+        [69]      | 4.6  | 15
     }
 }

@@ -9,21 +9,25 @@ import java.util.stream.IntStream;
  */
 public class MinimumSpeedToArriveOnTime {
     public int minSpeedOnTime(int[] dist, double hour) {
-        if (hour < dist.length - 1) return -1;
-        int sum = Arrays.stream(dist).sum();
-        double startingSpeed = Math.ceil(sum / hour);
-
-        int length = dist.length;
-        while (true) {
-            double finalStartingSpeed = startingSpeed;
+        int sum = Arrays.stream(dist).sum(), length = dist.length, minSpeed = -1;
+        int lowerBound = (int) Math.floor(sum / hour), upperBound = (int) 1e7;
+        
+        while (lowerBound <= upperBound) {
+            int currentSpeed = lowerBound + (upperBound - lowerBound) / 2;
             double timeTaken =
                     IntStream.range(0, length - 1)
-                            .map(index -> (int) Math.ceil(dist[index] / finalStartingSpeed))
+                            .map(index -> (int) Math.ceil((double) dist[index] / currentSpeed))
                             .sum()
-                            + dist[length - 1] / startingSpeed;
-
-            if (timeTaken <= hour) return (int) startingSpeed;
-            else startingSpeed += 1;
+                            + (double) dist[length - 1] / currentSpeed;
+            
+            if (timeTaken <= hour) {
+                minSpeed = currentSpeed;
+                upperBound = currentSpeed - 1;
+            } else {
+                lowerBound = currentSpeed + 1;
+            }
         }
+        
+        return minSpeed;
     }
 }
